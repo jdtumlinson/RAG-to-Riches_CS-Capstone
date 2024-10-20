@@ -1,0 +1,6 @@
+langchain>=0.0.156
+langchain-openai>=0.0.6
+langchain-chroma>=0.0.5
+openai>=0.27.0
+PyPDF2>=3.0.0
+numpy>=1.24.0
