@@ -9,6 +9,31 @@ import numpy as np
 #from util import string_length_statistics
 import PyPDF2
 
+# CONSTANTS
+
+CHUNK_SIZE = 5
+K = 5
+
+########################################################
+# The functions below are utility functions.
+########################################################
+
+# Greet
+def greet():
+    print("WELCOME")
+
+# Get question
+def get_question():
+    """Function to get input from the user"""
+    question = input("Please enter a question in natural language:")
+    return question
+
+# Output
+def output(question, vector_store):
+    result = retrieve_sections(question, K, vector_store)
+    print(result)
+
+# Extract text from pdf
 def extract_text_from_pdf(pdf_file_path):
     with open(pdf_file_path, 'rb') as file:
         pdf_reader = PyPDF2.PdfReader(file)
@@ -20,19 +45,13 @@ def extract_text_from_pdf(pdf_file_path):
             text_by_page.append(text)
         return text_by_page
     
+# Get pdf location
 def get_pdf_location():
     """Function to get input from the user"""
     file_path = input("Please enter the relative pdf location:")
     return file_path
 
-def get_question():
-    """Function to get input from the user"""
-    question = input("Please enter a question in natural language:")
-    return question
-
-def greet():
-    print("WELCOME")
-
+# String length statistics
 def string_length_statistics(strings):
     # Calculate the length of each string
     lengths = [len(s) for s in strings]
@@ -51,10 +70,16 @@ def string_length_statistics(strings):
     print(f"Minimum length: {min_length}")
     print(f"Maximum length: {max_length}")
 
+# Print document statistics
 def print_doc_stats(pages):
     print("Some information about the length of each page. (length of strings after parsing, not the word count)")
     string_length_statistics(pages)
 
+########################################################
+# The functions above are utility functions.
+########################################################
+
+# Generate chunks (a list of strings) from the whole text.
 def chunk_generator(chunk_size, string_list):
     # Calculate the number of strings each element in the new list should have
     count = len(string_list) // chunk_size
@@ -75,7 +100,7 @@ def chunk_generator(chunk_size, string_list):
     
     return combined_strings
 
-# Post-processing
+# Format the retrieved documents.
 def format_docs(docs):
     docs_update = []
     for doc in docs:
@@ -84,7 +109,7 @@ def format_docs(docs):
         docs_update.append(f"start_index: {start_index}, end_index: {end_index}")# - Content: {doc.page_content}
     return "\n".join(docs_update)
 
-# Retrieve-sections
+# Retrieve sections from the vector store.
 def retrieve_sections(question, count, vector_store):
     retriever = vector_store.as_retriever(search_kwargs={"k": count})
     rag_chain = (
@@ -94,12 +119,13 @@ def retrieve_sections(question, count, vector_store):
     retrieved_docs = rag_chain.invoke(question)
     return retrieved_docs
 
-def output(question, vector_store):
-    result = retrieve_sections(question, 5, vector_store)
-    print(result)
-
+# Main
 def main():
+
+    # Greet.
     greet()
+
+    # Prompt for pdf location until a valid one is provided.
     got_pdf_location=False
     while got_pdf_location==False:
         try:
@@ -109,7 +135,9 @@ def main():
             got_pdf_location=True
         except:
             print("TRY AGAIN")
-    chunk_sizes = [5]
+    
+    # Divide the pages into chunks of different sizes
+    chunk_sizes = [CHUNK_SIZE]
     chunks = []
     # Generate chunks and create Document objects
     for c_size in chunk_sizes:
@@ -124,15 +152,14 @@ def main():
                     },
                 )
             )
-    # Initialize the embedding model with the API key
-    api_key = "your-api-key-here"
+    
+    # Initialize the embedding model and vector store.
+    # Store the chunks in the vector store.
+    # Batch processing with batch size of 10.
+    # Token per minute limit.
+    api_key = "your_api_key_here"
     embedding_model = OpenAIEmbeddings(openai_api_key=api_key)
-    
-    # Initialize an empty Chroma vector store with the embedding function
     vector_store = Chroma(embedding_function=embedding_model)
-    
-    # Why? TPM limit.
-    # Batch processing with batch size of 10
     batch_size = 10
     num_chunks = len(chunks)
     for i in range(0, num_chunks, batch_size):
@@ -145,7 +172,7 @@ def main():
         # Add texts, embeddings, and metadata to the vector store
         vector_store.add_texts(texts=texts, embeddings=embeddings, metadatas=metadatas)
 
-    # Loop
+    # Question loop.
     while True:
         question = get_question()
         output(question, vector_store)
