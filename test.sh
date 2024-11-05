@@ -17,6 +17,7 @@ try:
     import openai
     import PyPDF2
     import numpy
+    import PyMuPDF
     print('All dependencies are installed correctly.')
 except ImportError as e:
     print(f'Missing module: {e}')

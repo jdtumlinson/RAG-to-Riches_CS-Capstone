@@ -7,7 +7,7 @@ from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 from langchain.schema import Document
 import numpy as np
 #from util import string_length_statistics
-import PyPDF2
+from pdfExtract import *
 
 # CONSTANTS
 
@@ -33,23 +33,9 @@ def output(question, vector_store):
     result = retrieve_sections(question, K, vector_store)
     print(result)
 
-# Extract text from pdf
-def extract_text_from_pdf(pdf_file_path):
-    with open(pdf_file_path, 'rb') as file:
-        pdf_reader = PyPDF2.PdfReader(file)
-        text_by_page = []
-        # Extract text from each page and store it in the list
-        for page_num in range(len(pdf_reader.pages)):
-            page = pdf_reader.pages[page_num]
-            text = page.extract_text()
-            text_by_page.append(text)
-        return text_by_page
+
     
-# Get pdf location
-def get_pdf_location():
-    """Function to get input from the user"""
-    file_path = input("Please enter the relative pdf location:")
-    return file_path
+
 
 # String length statistics
 def string_length_statistics(strings):
