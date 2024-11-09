@@ -42,6 +42,21 @@ def extractPDFText(pdfFP):
 
 
 
+#   Function:   extractPDFText
+#   Parameters: pdf_file_path (string)
+#   Returns:    pages (array | text_by_page[i] = text on page i)
+#----------------------------------------------------------------------#
+def extractPDFTextByPage(doc):
+    pages = []        #Open pdf as document
+    
+    for i in range(doc.page_count):
+        pages += [doc.get_page_text(i)]     #extract each page as text
+        
+    return pages
+#**********************************************************************#
+
+
+
 #   Function:   getTOC
 #   Parameters: doc (custom object -- document)
 #   Returns:    toc (array | array | toc[i][0] = lvl, toc[i][1] = title
@@ -55,7 +70,25 @@ def getTOC(doc):
     toc[-1].append(doc.page_count)  #Add last page
     
     return toc
+#**********************************************************************#
 
+
+
+#   Function:   parsePDFBySection
+#   Parameters: doc (custom object -- document)
+#   Returns:    sections (array | array | sections[i][0] = title,
+#                                         sections[i][1] = text)
+#----------------------------------------------------------------------#
+def parsePDFBySection(doc):
+    toc, pages, sections = getTOC(doc), extractPDFTextByPage(doc), []
+    
+    for i in range(len(toc)):
+        sections.append([toc[i][1]])
+        
+        sections[i].append("".join(pages[toc[i][2] - 1: toc[i][3]]))
+    
+    return sections
+#**********************************************************************#
 
 
 
@@ -69,6 +102,7 @@ def test():
     # filePath = get_pdf_location()
     doc = pdf.open("project_manual.pdf")
     
+    printTest(parsePDFBySection(doc)[:2])
     printTest(getTOC(doc))
     
     
