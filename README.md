@@ -1,4 +1,4 @@
-# M1 v0.1
+# RAG to Riches
 
 ## Overview
 This program extracts text from a PDF, splits the text into chunks, and allows you to query the content using natural language. It uses OpenAI's embeddings to convert the text into vectors for efficient retrieval based on your questions.
@@ -37,3 +37,34 @@ python main.py
 ### 4. Provide PDF Path and Ask Questions
 - Enter the path to your PDF when prompted.
 - Ask questions in natural language, and the program will return relevant sections from the document.
+
+## Extra
+
+### Chunk Generation
+
+#### What are chunks?
+A chunk is a list of LangChain documents.
+
+#### What is a LangChain document?
+A LangChain document is a way to represent data. It might be overcomplicating things, but it was used in the template notebook, and it could change in the future.
+
+#### How to generate chunks from a page range?
+To generate chunks from a page range, you can use the following approach:
+```python
+Document(
+    page_content=chunk[idx]["string"],
+    metadata={
+        "start_index": chunk[idx]["start_index"],
+        "end_index": chunk[idx]["end_index"],
+    }
+)
+```
+#### How to generate chunks from sections?
+To generate chunks from sections, you can use the following approach:
+```python
+Document(
+    page_content=chunk[idx]["string"],
+    metadata={
+        "section_id": section_id
+    }
+)
