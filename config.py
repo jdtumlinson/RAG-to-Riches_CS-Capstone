@@ -10,3 +10,4 @@ openai.api_key = API_KEY
 
 PAGE_RANGE = False
 PDF_LOCATION = "project_manual.pdf"
+CHAT = True

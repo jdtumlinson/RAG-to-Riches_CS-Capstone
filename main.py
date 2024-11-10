@@ -114,13 +114,58 @@ def store_chunks(chunks):
 
     return vector_store
 
+def get_user_question():
+    user_question = input("Enter your question (or type 'exit' to quit): ")
+    if user_question.lower() == 'exit':
+        return 0
+    return user_question
+
+from langchain.chains import RetrievalQA
+from langchain_community.llms import OpenAI
+from langchain.chat_models import ChatOpenAI
+
 def main():
+    
     # 1. Parse the PDF, seperate it into chunks.
     chunks = pdf_location_to_chunks(PDF_LOCATION)
     # 2. Store the chunks in a vector database.
     db = store_chunks(chunks)
-    # 3. Chat.
-    chat(db)
+    if CHAT == True:
+        # 3. Chat.
+        chat(db)
+
+    # Assuming 'db' is your vector database and 'K' is the number of documents to retrieve
+    else:
+        # Get the question.
+        user_question = input("Enter your question (or type 'exit' to quit'): ")
+        if user_question.lower() != 'exit':
+            # Create a retriever
+            retriever = db.as_retriever(search_kwargs={"k": K})
+            # Retrieve relevant documents
+            docs = retriever.invoke(user_question)
+            # Display the titles of the retrieved documents
+            for i, doc in enumerate(docs, 1):
+                print(f"[{i}] {doc.metadata['title']}")
+            print("Example response: 1, 2")
+            indices_string = input("Enter response: ")
+            indices = [int(i) for i in indices_string.replace(" ", "").split(",")]
+            print(indices)
+            # Collect the selected documents
+            selected_docs = [docs[index - 1] for index in indices]
+            print(len(selected_docs))
+            context = "\n".join([doc.page_content for doc in selected_docs])
+            # Create the combined input
+            combined_input = f"Context: You are an AI LLM used in a RAG system (AEC industry, document reviews). Your goal is to use the context below (retrieved with semantic search from a vector database) to answer the user's question.\n\n{context}\n\nUser's Question: {user_question}"
+            # print(combined_input)
+            try:
+                # Initialize the ChatOpenAI model
+                llm = ChatOpenAI(model_name="gpt-3.5-turbo", openai_api_key=API_KEY)  # or pass openai_api_key='your-api-key-here' if not set as env variable
+                # Generate the response using predict
+                response = llm.predict(combined_input)
+                print("Assistant:", response)
+            except Exception as e:
+                print(f"Error generating response: {e}")
+
 
 if __name__ == "__main__":
     main()
