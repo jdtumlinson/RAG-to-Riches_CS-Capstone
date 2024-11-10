@@ -72,12 +72,25 @@ def pdf_location_to_chunks(pdf_location):
         pages = generate_pages(pdf_location)
         # generate chunks by grouping the pages
         chunks = generate_chunks(pages)
-        # return
-        return chunks
     # if the system is using sections.
     else:
-        # TODO
-        pass
+        # get the sections
+        doc = pdf.open(pdf_location)
+        # sections[i][0] = title, sections[i][1] = text.
+        sections = parsePDFBySection(doc)
+        # create the chunks
+        chunks = []
+        for section in sections:
+            chunks.append(
+                Document(
+                    page_content=section[1],
+                    metadata={
+                        "title": section[0],
+                    },
+                )
+            )
+
+    return chunks
 
 def store_chunks(chunks):
     # Initialize the embedding model and vector store.
@@ -111,4 +124,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
