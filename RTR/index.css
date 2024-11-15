@@ -1,0 +1,143 @@
+/* Resetting some styles for consistency */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: bisque;
+}
+
+.nav {
+    background-color: black;
+    color: #fff;
+    padding: 15px;
+    text-align: left;
+    padding-left: 20px;
+}
+
+footer {
+    background-color: black;
+    color: #fff;
+    padding: 15px;
+    text-align: center;
+}
+
+.content {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.document-container {
+    display: flex;
+    gap: 40px; /* Spacing between documents */
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.document-box {
+    border: 2px black;
+    background-color: grey;
+    color: whitesmoke;
+    padding: 20px;
+    padding-bottom: 40px; /* Adds space between the image and chat box */
+    width: 400px;
+    height: 600px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    border-radius: 8px;
+    box-shadow: 0px 15px 30px rgba(0, 0, 0, 0.5);
+    transition: box-shadow 0.3s ease;
+}
+
+.document-box:hover {
+    box-shadow: 0px 20px 40px rgba(0, 0, 0, 0.6); /* Darker shadow on hover */
+}
+
+.header-with-button {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.header-with-button h2 {
+    margin: 0;
+    font-size: 22px;
+    font-weight: bold;
+    flex: 1;
+}
+
+.upload-button {
+    font-size: 20px;
+    font-weight: bold;
+    background-color: #555;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.upload-button:hover {
+    background-color: #333;
+}
+
+.document-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 5px;
+    margin-top: 10px;
+    margin-bottom: 20px; /* Adds space between the image and chat box */
+    background-color: #f0f0f0;
+}
+
+.chat-box {
+    display: flex;
+    gap: 5px;
+    margin-top: auto;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.chat-box input[type="text"] {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.chat-box button {
+    padding: 10px;
+    border: none;
+    background-color: #555;
+    color: #fff;
+    font-size: 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 70px; /* Larger button width for visibility */
+}
+
+.chat-box button:hover {
+    background-color: #333;
+}

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rags to Riches</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    <header class="nav">
+        <h1>Rags to Riches</h1>
+    </header>
+    <main class="content">
+        <div class="document-container">
+            <div class="document-box">
+                <div class="header-with-button">
+                    <h2>Contractor Submittal</h2>
+                    <button class="upload-button" onclick="document.getElementById('file-upload-1').click()">+</button>
+                    <input type="file" id="file-upload-1" style="display: none;" onchange="uploadDocument(this)">
+                </div>
+                <img src="https://upload.wikimedia.org/wikipedia/commons/3/3f/Toilet_Trained_Cat_22_Aug_2005.jpg" alt="Contractor Submittal">
+                
+                <div class="chat-box">
+                    <input type="text" placeholder="Type a message..." />
+                    <button>Send</button>
+                </div>
+            </div>
+
+            <div class="document-box">
+                <div class="header-with-button">
+                    <h2>Project Manual</h2>
+                    <button class="upload-button" onclick="document.getElementById('file-upload-2').click()">+</button>
+                    <input type="file" id="file-upload-2" style="display: none;" onchange="uploadDocument(this)">
+                </div>
+                <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/Sample_JPEG_Image.jpg" alt="Project Manual">
+                
+                <div class="chat-box">
+                    <input type="text" placeholder="Type a message..." />
+                    <button>Send</button>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer>
+        <p>Footer Content</p>
+    </footer>
+
+    <!-- Link to the external JavaScript file -->
+    <script src="index.js"></script>
+</body>
+</html>
