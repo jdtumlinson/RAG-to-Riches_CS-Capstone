@@ -1,3 +1,10 @@
+#
+#   File:           main.py
+#   Description:    Main loop of program.
+#
+
+#   Includes
+#----------------------------------------------------------------------#
 from config import *
 from pdfExtract import *
 from chat import *
@@ -6,7 +13,11 @@ from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 from langchain.schema import Document
 import PyPDF2
 from langchain.schema import HumanMessage
+#**********************************************************************#
 
+
+
+#----------------------------------------------------------------------#
 def generate_pages(pdf_file_path):
     with open(pdf_file_path, 'rb') as file:
         pdf_reader = PyPDF2.PdfReader(file)
@@ -17,7 +28,11 @@ def generate_pages(pdf_file_path):
             text = page.extract_text()
             text_by_page.append(text)
         return text_by_page
-    
+#**********************************************************************#
+
+
+
+#----------------------------------------------------------------------#
 def generate_chunks(pages):
 
     # Generate chunks (a list of strings) from the whole text.
@@ -54,7 +69,11 @@ def generate_chunks(pages):
                 )
             )
     return chunks
+#**********************************************************************#
 
+
+
+#----------------------------------------------------------------------#
 def pdf_location_to_chunks(pdf_location):
     # if the system is using a page range.
     if PAGE_RANGE == True:
@@ -67,20 +86,24 @@ def pdf_location_to_chunks(pdf_location):
         # get the sections
         doc = pdf.open(pdf_location)
         # sections[i][0] = title, sections[i][1] = text.
-        sections = parsePDFBySection(doc)
+        sections = extract_sections(doc)
         # create the chunks
         chunks = []
         for section in sections:
             chunks.append(
                 Document(
-                    page_content=section[1],
+                    page_content=section.text,
                     metadata={
-                        "title": section[0],
+                        "title": section.title,
                     },
                 )
             )
     return chunks
+#**********************************************************************#
 
+
+
+#----------------------------------------------------------------------#
 def store_chunks(chunks):
     # Initialize the embedding model and vector store.
     # Store the chunks in the vector store.
@@ -101,13 +124,21 @@ def store_chunks(chunks):
         # Add texts, embeddings, and metadata to the vector store
         vector_store.add_texts(texts=texts, embeddings=embeddings, metadatas=metadatas)
     return vector_store
+#**********************************************************************#
 
+
+
+#----------------------------------------------------------------------#
 def get_user_question():
     user_question = input("Enter your question (or type 'exit' to quit): ")
     if user_question.lower() == 'exit':
         return 0
     return user_question
+#**********************************************************************#
 
+
+
+#----------------------------------------------------------------------#
 def main():
     # 1. Parse the PDF, seperate it into chunks.
     chunks = pdf_location_to_chunks(PDF_LOCATION)
@@ -149,6 +180,9 @@ def main():
                 print("Assistant:", response.content)
             except Exception as e:
                 print(f"Error generating response: {e}")
+#**********************************************************************#
+
+
 
 if __name__ == "__main__":
     main()
